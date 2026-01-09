@@ -5,15 +5,12 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <meta name="robots" content="noindex" />
   <title>Azhunholding - Admin Panel</title>
-  <!-- Netlify Identity Widget -->
   <script src="https://identity.netlify.com/v1/netlify-identity-widget.js"></script>
 </head>
 <body>
-  <!-- Decap CMS -->
   <script src="https://unpkg.com/decap-cms@^3.0.0/dist/decap-cms.js"></script>
-  
   <script>
-    // CMS yüklənməzdən əvvəl Identity-ni məcburi olaraq qeyd edirik
+    // Netlify Identity-ni CMS üçün hazır vəziyyətə gətiririk
     if (window.netlifyIdentity) {
       window.netlifyIdentity.on("init", user => {
         if (!user) {
@@ -23,21 +20,6 @@
         }
       });
     }
-
-    // ƏN VACİB HİSSƏ: CMS-ə saytın ünvanını birbaşa deyirik
-    window.netlifyIdentityWidget = window.netlifyIdentity;
-    
-    // Əgər CMS yenə tapmasa, ona kömək edirik
-    (function() {
-      var interval = setInterval(function() {
-        if (window.netlifyIdentity) {
-          window.netlifyIdentityWidget = window.netlifyIdentity;
-          if (window.CMS) {
-            clearInterval(interval);
-          }
-        }
-      }, 100);
-    })();
   </script>
 </body>
 </html>
