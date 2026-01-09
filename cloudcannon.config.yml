@@ -9,7 +9,7 @@ collections_config:
     filter:
       base: none
       include:
-        - index.html
+        - "index.html"
     config:
       url: /index.html
       text_key: title
@@ -17,6 +17,18 @@ collections_config:
         - visual
       editor:
         default_item_editor: visual
+
+# Digər faylları gizlətmək üçün
+common_config:
+  filter:
+    base: none
+    exclude:
+      - admin
+      - content.json
+      - firebase.json
+      - README.md
+      - CNAME
+      - cloudcannon.config.yml
 
 paths:
   static: /
