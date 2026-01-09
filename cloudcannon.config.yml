@@ -10,6 +10,13 @@ collections_config:
       base: none
       include:
         - index.html
+    config:
+      url: /index.html
+      text_key: title
+      allowed_views:
+        - visual
+      editor:
+        default_item_editor: visual
 
 paths:
   static: /
