@@ -1,6 +1,5 @@
 backend:
-  name: github
-  repo: azhunmmc-source/azhunholding
+  name: git-gateway
   branch: main
 
 media_folder: "videos"
@@ -14,5 +13,14 @@ collections:
         label: "Ana Səhifə"
         file: "index.html"
         fields:
-          - {label: "Başlıq", name: "title", widget: "string"}
-          - {label: "Təsvir", name: "description", widget: "text"}
+          - {label: "Səhifə Başlığı (SEO)", name: "title", widget: "string"}
+          - {label: "Səhifə Təsviri (SEO)", name: "description", widget: "text"}
+          - {label: "Hero Başlığı", name: "hero_title", widget: "string"}
+          - {label: "Hero Alt Başlığı", name: "hero_subtitle", widget: "text"}
+          - {label: "Haqqımızda Başlığı", name: "about_title", widget: "string"}
+          - {label: "Haqqımızda Mətni 1", name: "about_text_1", widget: "markdown"}
+          - {label: "Haqqımızda Mətni 2", name: "about_text_2", widget: "markdown"}
+          - {label: "Video Faylı", name: "about_video", widget: "file"}
+          - {label: "Telefon", name: "phone", widget: "string"}
+          - {label: "Email", name: "email", widget: "string"}
+          - {label: "Ünvan", name: "address", widget: "string"}
