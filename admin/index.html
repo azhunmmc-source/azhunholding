@@ -1,29 +1,192 @@
-<!doctype html>
-<html>
+<!DOCTYPE html>
+<html lang="az">
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <meta name="robots" content="noindex" />
-  <title>Azhunholding - Admin Panel</title>
-  <!-- 1. Əvvəlcə Identity Widget yüklənir -->
-  <script src="https://identity.netlify.com/v1/netlify-identity-widget.js"></script>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AZHUN - Admin Panel</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Firebase SDK -->
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-database-compat.js"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Manrope:wght@400;600;700&display=swap');
+        body { font-family: 'Manrope', sans-serif; }
+    </style>
 </head>
-<body>
-  <script>
-    // 2. CMS yüklənməzdən əvvəl Identity-ni CMS-ə bağlayırıq
-    window.netlifyIdentityWidget = window.netlifyIdentity;
-    
-    if (window.netlifyIdentity) {
-      window.netlifyIdentity.on("init", user => {
-        if (!user) {
-          window.netlifyIdentity.on("login", () => {
-            document.location.href = "/admin/";
-          });
+<body class="bg-slate-50 text-slate-900">
+
+    <!-- Login Səhifəsi -->
+    <div id="login-section" class="min-h-screen flex items-center justify-center p-6">
+        <div class="max-w-md w-full bg-white rounded-2xl shadow-xl p-8 border border-slate-100">
+            <div class="text-center mb-8">
+                <h1 class="text-3xl font-bold text-slate-800 tracking-tight">AZHUN</h1>
+                <p class="text-slate-500 mt-2 text-sm uppercase tracking-widest font-semibold">Admin Girişi</p>
+            </div>
+            
+            <form id="login-form" class="space-y-4">
+                <div>
+                    <label class="block text-sm font-bold text-slate-700 mb-1">Email</label>
+                    <input type="email" id="email" class="w-full px-4 py-3 rounded-xl border border-slate-200 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition-all" placeholder="admin@azhunholding.com" required>
+                </div>
+                <div>
+                    <label class="block text-sm font-bold text-slate-700 mb-1">Şifrə</label>
+                    <input type="password" id="password" class="w-full px-4 py-3 rounded-xl border border-slate-200 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition-all" placeholder="••••••••" required>
+                </div>
+                <button type="submit" class="w-full bg-slate-900 text-white font-bold py-3 rounded-xl hover:bg-slate-800 transition-all shadow-lg active:scale-[0.98]">Daxil Ol</button>
+            </form>
+            <p id="login-error" class="text-red-500 text-sm mt-4 text-center hidden font-medium"></p>
+        </div>
+    </div>
+
+    <!-- Dashboard (Daxil olandan sonra) -->
+    <div id="admin-section" class="hidden min-h-screen flex">
+        <!-- Sidebar -->
+        <aside class="w-64 bg-slate-900 text-white p-6 flex flex-col">
+            <h2 class="text-xl font-bold mb-10 tracking-widest">AZHUN</h2>
+            <nav class="space-y-2 flex-1">
+                <button onclick="showTab('content')" class="w-full text-left px-4 py-3 rounded-lg bg-slate-800 hover:bg-slate-700 transition-all font-medium">Məzmun İdarəetməsi</button>
+                <button onclick="showTab('moderators')" class="w-full text-left px-4 py-3 rounded-lg hover:bg-slate-700 transition-all font-medium">Moderatorlar</button>
+            </nav>
+            <button id="logout-btn" class="mt-auto px-4 py-3 text-slate-400 hover:text-white transition-all text-left font-medium">Çıxış Et</button>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="flex-1 p-10 overflow-y-auto">
+            <header class="flex justify-between items-center mb-10">
+                <h2 id="tab-title" class="text-3xl font-bold text-slate-800">Məzmun İdarəetməsi</h2>
+                <span id="user-info" class="text-sm font-bold text-slate-500 bg-slate-200 px-4 py-2 rounded-full">Moderator</span>
+            </header>
+
+            <!-- Content Form -->
+            <div id="content-tab" class="space-y-6 max-w-4xl">
+                <div class="bg-white p-8 rounded-2xl border border-slate-100 shadow-sm space-y-4">
+                    <h3 class="text-lg font-bold text-slate-800 border-b pb-2 mb-4">Ana Səhifə (Hero)</h3>
+                    <div class="grid grid-cols-2 gap-4">
+                        <div class="col-span-2">
+                            <label class="block text-xs font-bold text-slate-500 uppercase mb-1">Ana Başlıq</label>
+                            <input type="text" id="db-hero-title" class="w-full px-4 py-3 rounded-xl border border-slate-200 focus:ring-2 focus:ring-blue-500 outline-none">
+                        </div>
+                        <div class="col-span-2">
+                            <label class="block text-xs font-bold text-slate-500 uppercase mb-1">Alt Başlıq</label>
+                            <textarea id="db-hero-subtitle" rows="3" class="w-full px-4 py-3 rounded-xl border border-slate-200 focus:ring-2 focus:ring-blue-500 outline-none"></textarea>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="bg-white p-8 rounded-2xl border border-slate-100 shadow-sm space-y-4">
+                    <h3 class="text-lg font-bold text-slate-800 border-b pb-2 mb-4">Haqqımızda</h3>
+                    <div>
+                        <label class="block text-xs font-bold text-slate-500 uppercase mb-1">Bölmə Başlığı</label>
+                        <input type="text" id="db-about-title" class="w-full px-4 py-3 rounded-xl border border-slate-200 focus:ring-2 focus:ring-blue-500 outline-none">
+                    </div>
+                    <div>
+                        <label class="block text-xs font-bold text-slate-500 uppercase mb-1">Əsas Mətn</label>
+                        <textarea id="db-about-text-1" rows="4" class="w-full px-4 py-3 rounded-xl border border-slate-200 focus:ring-2 focus:ring-blue-500 outline-none"></textarea>
+                    </div>
+                </div>
+
+                <button id="save-content" class="bg-blue-600 text-white font-bold px-8 py-4 rounded-xl hover:bg-blue-700 transition-all shadow-lg shadow-blue-200 active:scale-95">Dəyişiklikləri Yadda Saxla</button>
+            </div>
+
+            <!-- Moderators Tab -->
+            <div id="moderators-tab" class="hidden space-y-6 max-w-4xl">
+                <div class="bg-white p-8 rounded-2xl border border-slate-100 shadow-sm">
+                    <h3 class="text-lg font-bold text-slate-800 mb-6">Yeni Moderator Əlavə Et</h3>
+                    <div class="grid grid-cols-2 gap-4">
+                        <div>
+                            <label class="block text-xs font-bold text-slate-500 uppercase mb-1">Email</label>
+                            <input type="email" id="new-mod-email" class="w-full px-4 py-3 rounded-xl border border-slate-200 focus:ring-2 focus:ring-blue-500 outline-none">
+                        </div>
+                        <div>
+                            <label class="block text-xs font-bold text-slate-500 uppercase mb-1">Şifrə</label>
+                            <input type="password" id="new-mod-password" class="w-full px-4 py-3 rounded-xl border border-slate-200 focus:ring-2 focus:ring-blue-500 outline-none">
+                        </div>
+                    </div>
+                    <button id="add-mod" class="mt-6 bg-slate-900 text-white font-bold px-8 py-3 rounded-xl hover:bg-slate-800 transition-all">Moderator Yarat</button>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <script>
+        // Firebase Config
+        const firebaseConfig = {
+            apiKey: "AIzaSyALBZ03IAWaWvHmVX-9zF2GVbIeBWmV_OA",
+            authDomain: "azhunholding-20283.firebaseapp.com",
+            databaseURL: "https://azhunholding-20283-default-rtdb.firebaseio.com",
+            projectId: "azhunholding-20283",
+            storageBucket: "azhunholding-20283.firebasestorage.app",
+            messagingSenderId: "525857337022",
+            appId: "1:525857337022:web:d2c581cc707d270a7c3bef",
+            measurementId: "G-GCJYX2WNKK"
+        };
+
+        // Firebase-i işə salırıq
+        firebase.initializeApp(firebaseConfig);
+
+        const auth = firebase.auth();
+        const db = firebase.database();
+
+        // Giriş formunu idarə edirik
+        document.getElementById('login-form').addEventListener('submit', (e) => {
+            e.preventDefault();
+            const email = document.getElementById('email').value;
+            const pass = document.getElementById('password').value;
+
+            auth.signInWithEmailAndPassword(email, pass)
+                .then(() => {
+                    document.getElementById('login-section').classList.add('hidden');
+                    document.getElementById('admin-section').classList.remove('hidden');
+                })
+                .catch(err => {
+                    const errorMsg = document.getElementById('login-error');
+                    errorMsg.innerText = "Xəta: Email və ya şifrə yanlışdır!";
+                    errorMsg.classList.remove('hidden');
+                });
+        });
+
+        // Çıxış
+        document.getElementById('logout-btn').addEventListener('click', () => {
+            auth.signOut().then(() => location.reload());
+        });
+
+        // Tab keçidləri
+        function showTab(tab) {
+            document.getElementById('content-tab').classList.add('hidden');
+            document.getElementById('moderators-tab').classList.add('hidden');
+            document.getElementById(tab + '-tab').classList.remove('hidden');
+            document.getElementById('tab-title').innerText = tab === 'content' ? 'Məzmun İdarəetməsi' : 'Moderatorlar';
         }
-      });
-    }
-  </script>
-  <!-- 3. ƏN SONDA Admin Panel (Decap CMS) yüklənir -->
-  <script src="https://unpkg.com/decap-cms@^3.0.0/dist/decap-cms.js"></script>
+
+        // Məlumatları bazadan yükləyirik
+        auth.onAuthStateChanged(user => {
+            if (user) {
+                document.getElementById('user-info').innerText = user.email;
+                db.ref('site_content').once('value', snapshot => {
+                    const data = snapshot.val();
+                    if (data) {
+                        document.getElementById('db-hero-title').value = data.hero_title || '';
+                        document.getElementById('db-hero-subtitle').value = data.hero_subtitle || '';
+                        document.getElementById('db-about-title').value = data.about_title || '';
+                        document.getElementById('db-about-text-1').value = data.about_text_1 || '';
+                    }
+                });
+            }
+        });
+
+        // Yadda saxla düyməsi
+        document.getElementById('save-content').addEventListener('click', () => {
+            const updates = {
+                hero_title: document.getElementById('db-hero-title').value,
+                hero_subtitle: document.getElementById('db-hero-subtitle').value,
+                about_title: document.getElementById('db-about-title').value,
+                about_text_1: document.getElementById('db-about-text-1').value
+            };
+            db.ref('site_content').update(updates)
+                .then(() => alert('Dəyişikliklər canlı olaraq yadda saxlanıldı!'))
+                .catch(err => alert('Xəta baş verdi: ' + err.message));
+        });
+    </script>
 </body>
 </html>

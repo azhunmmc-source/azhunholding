@@ -10,7 +10,7 @@ collections:
     label: "Səhifələr"
     files:
       - name: "home"
-        label: "Ana Səhifə"
+        label: "Ana Səhifə (Bütün Mətnlər)"
         file: "content.json"
         fields:
           - {label: "Səhifə Başlığı (SEO)", name: "title", widget: "string"}
@@ -18,9 +18,8 @@ collections:
           - {label: "Hero Başlığı", name: "hero_title", widget: "string"}
           - {label: "Hero Alt Başlığı", name: "hero_subtitle", widget: "text"}
           - {label: "Haqqımızda Başlığı", name: "about_title", widget: "string"}
-          - {label: "Haqqımızda Mətni 1", name: "about_text_1", widget: "markdown"}
-          - {label: "Haqqımızda Mətni 2", name: "about_text_2", widget: "markdown"}
-          - {label: "Video Faylı", name: "about_video", widget: "file"}
+          - {label: "Haqqımızda Mətni 1", name: "about_text_1", widget: "text"}
+          - {label: "Haqqımızda Mətni 2", name: "about_text_2", widget: "text"}
           - {label: "Telefon", name: "phone", widget: "string"}
           - {label: "Email", name: "email", widget: "string"}
           - {label: "Ünvan", name: "address", widget: "string"}
