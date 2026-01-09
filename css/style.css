@@ -1,7 +1,15 @@
-/* Custom styles for Azhunholding */
+/* Global Styles */
+@import url('https://fonts.googleapis.com/css2?family=Manrope:wght@300;400;500;600;700&family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400&display=swap');
 
 html {
     scroll-behavior: smooth;
+}
+
+body {
+    font-family: 'Manrope', sans-serif;
+    overflow-x: hidden;
+    background-color: #0f0f0f;
+    color: #f4f4f4;
 }
 
 /* Custom Scrollbar */
@@ -10,43 +18,83 @@ html {
 }
 
 ::-webkit-scrollbar-track {
-    background: #f1f1f1;
+    background: #0f0f0f;
 }
 
 ::-webkit-scrollbar-thumb {
-    background: #ea580c; /* orange-600 */
+    background: #333;
     border-radius: 4px;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-    background: #c2410c; /* orange-700 */
+    background: #C5A059;
 }
 
-/* Animations */
-@keyframes fadeIn {
-    from { opacity: 0; transform: translateY(20px); }
-    to { opacity: 1; transform: translateY(0); }
+/* Text Selection */
+::selection {
+    background: #C5A059;
+    color: #000;
 }
 
-section {
-    animation: fadeIn 0.8s ease-out forwards;
+/* Typography Overrides */
+h1, h2, h3, h4, h5, h6 {
+    font-family: 'Playfair Display', serif;
 }
 
-/* Mobile Menu Transition */
-#mobile-menu {
-    transition: all 0.3s ease-in-out;
+/* Custom Animations */
+@keyframes float {
+    0% { transform: translateY(0px); }
+    50% { transform: translateY(-10px); }
+    100% { transform: translateY(0px); }
 }
 
-#mobile-menu.hidden {
-    display: none;
+.animate-float {
+    animation: float 6s ease-in-out infinite;
 }
 
-#mobile-menu:not(.hidden) {
-    display: flex;
-    animation: slideDown 0.3s ease-out;
+/* Gradient Text Utility */
+.text-gradient {
+    background: linear-gradient(to right, #fff, #C5A059);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
 }
 
-@keyframes slideDown {
-    from { opacity: 0; transform: translateY(-10px); }
-    to { opacity: 1; transform: translateY(0); }
+/* Glass Effect */
+.glass {
+    background: rgba(255, 255, 255, 0.03);
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+/* Preloader styles */
+.loaded #preloader {
+    opacity: 0;
+    pointer-events: none;
+}
+
+/* Navigation Scrolled State */
+#navbar.scrolled {
+    background-color: rgba(15, 15, 15, 0.95);
+    backdrop-filter: blur(10px);
+    padding-top: 1rem;
+    padding-bottom: 1rem;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+}
+
+/* Image Hover Effects */
+.img-hover-zoom {
+    overflow: hidden;
+}
+
+.img-hover-zoom img {
+    transition: transform 0.8s cubic-bezier(0.165, 0.84, 0.44, 1);
+}
+
+.img-hover-zoom:hover img {
+    transform: scale(1.1);
+}
+
+/* Button Hover Glow */
+.btn-glow:hover {
+    box-shadow: 0 0 20px rgba(197, 160, 89, 0.3);
 }
