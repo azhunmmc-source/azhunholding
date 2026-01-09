@@ -11,7 +11,7 @@ collections:
     files:
       - name: "home"
         label: "Ana Səhifə"
-        file: "index.html"
+        file: "content.json"
         fields:
           - {label: "Səhifə Başlığı (SEO)", name: "title", widget: "string"}
           - {label: "Səhifə Təsviri (SEO)", name: "description", widget: "text"}
