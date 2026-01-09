@@ -46,8 +46,7 @@
             <h2 class="text-xl font-bold mb-10 tracking-widest">AZHUN</h2>
             <nav class="space-y-2 flex-1">
                 <button onclick="showTab('content')" class="w-full text-left px-4 py-3 rounded-lg bg-slate-800 hover:bg-slate-700 transition-all font-medium">Məzmun İdarəetməsi</button>
-                <button onclick="showTab('moderators')" class="w-full text-left px-4 py-3 rounded-lg hover:bg-slate-700 transition-all font-medium">Moderatorlar</button>
-            </nav>
+                <button onclick="showTab('i/
             <button id="logout-btn" class="mt-auto px-4 py-3 text-slate-400 hover:text-white transition-all text-left font-medium">Çıxış Et</button>
         </aside>
 
@@ -89,6 +88,40 @@
                 <button id="save-content" class="bg-blue-600 text-white font-bold px-8 py-4 rounded-xl hover:bg-blue-700 transition-all shadow-lg shadow-blue-200 active:scale-95">Dəyişiklikləri Yadda Saxla</button>
             </div>
 
+            <!-- Products Tab -->
+            <div id="products-tab" class="hidden space-y-6 max-w-4xl">
+                <div class="bg-white p-8 rounded-2xl border border-slate-100 shadow-sm">
+                    <h3 class="text-lg font-bold text-slate-800 mb-6">Yeni Məhsul Əlavə Et</h3>
+                    <div class="space-y-4">
+                        <input type="hidden" id="product-id">
+                        <div>
+                            <label class="block text-xs font-bold text-slate-500 uppercase mb-1">Məhsulun Adı</label>
+                            <input type="text" id="prod-name" class="w-full px-4 py-3 rounded-xl border border-slate-200 focus:ring-2 focus:ring-blue-500 outline-none">
+                        </div>
+                        <div>
+                            <label class="block text-xs font-bold text-slate-500 uppercase mb-1">Təsviri</label>
+                            <textarea id="prod-desc" rows="2" class="w-full px-4 py-3 rounded-xl border border-slate-200 focus:ring-2 focus:ring-blue-500 outline-none"></textarea>
+                        </div>
+                        <div>
+                            <label class="block text-xs font-bold text-slate-500 uppercase mb-1">Şəkil URL (Unsplash və s.)</label>
+                            <input type="text" id="prod-image" class="w-full px-4 py-3 rounded-xl border border-slate-200 focus:ring-2 focus:ring-blue-500 outline-none" placeholder="https://images.unsplash.com/...">
+                        </div>
+                        <div class="flex gap-2">
+                            <button id="save-product" class="bg-blue-600 text-white font-bold px-8 py-3 rounded-xl hover:bg-blue-700 transition-all">Yadda Saxla</button>
+                            <button id="cancel-edit" class="hidden bg-slate-200 text-slate-700 font-bold px-8 py-3 rounded-xl hover:bg-slate-300 transition-all">Ləğv Et</button>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="bg-white p-8 rounded-2xl border border-slate-100 shadow-sm">
+                    <h3 class="text-lg font-bold text-slate-800 mb-6">Mövcud Məhsullar</h3>
+                    <div id="products-list" class="grid grid-cols-1 gap-4">
+                        <!-- Məhsullar bura yüklənəcək -->
+                        <p class="text-slate-400 italic text-sm">Yüklənir...</p>
+                    </div>
+                </div>
+            </div>
+
             <!-- Moderators Tab -->
             <div id="moderators-tab" class="hidden space-y-6 max-w-4xl">
                 <div class="bg-white p-8 rounded-2xl border border-slate-100 shadow-sm">
@@ -121,44 +154,116 @@
             appId: "1:525857337022:web:d2c581cc707d270a7c3bef",
             measurementId: "G-GCJYX2WNKK"
         };
-
+tors-ab').classList.add('hidden');
+            dcument.getElementById('poduct
         // Firebase-i işə salırıq
-        firebase.initializeApp(firebaseConfig);
+        fire
+            // Sibebar rəngləri
+            canst buttons = dose.initquarySeleclorAzl('aside pav bu(tona);
+            bustons.forEech(Cnn => {
+                btn.classLfsi.remove('bg-sgat)-800;;
+                if (btnt.oLowerCase().includes(m' :tb === 'poducs' ? 'hulm')) {
+                    btn.classList.add('bg-ste-800)
+        
+            });        const auth = firebase.auth();
 
-        const auth = firebase.auth();
-        const db = firebase.database();
-
-        // Giriş formunu idarə edirik
-        document.getElementById('login-form').addEventListener('submit', (e) => {
-            e.preventDefault();
-            const email = document.getElementById('email').value;
-            const pass = document.getElementById('password').value;
-
-            auth.signInWithEmailAndPassword(email, pass)
-                .then(() => {
-                    document.getElementById('login-section').classList.add('hidden');
-                    document.getElementById('admin-section').classList.remove('hidden');
-                })
-                .catch(err => {
-                    const errorMsg = document.getElementById('login-error');
-                    errorMsg.innerText = "Xəta: Email və ya şifrə yanlışdır!";
-                    errorMsg.classList.remove('hidden');
-                });
-        });
-
-        // Çıxış
-        document.getElementById('logout-btn').addEventListener('click', () => {
-            auth.signOut().then(() => location.reload());
-        });
-
-        // Tab keçidləri
-        function showTab(tab) {
-            document.getElementById('content-tab').classList.add('hidden');
-            document.getElementById('moderators-tab').classList.add('hidden');
-            document.getElementById(tab + '-tab').classList.remove('hidden');
-            document.getElementById('tab-title').innerText = tab === 'content' ? 'Məzmun İdarəetməsi' : 'Moderatorlar';
+        n   cons= tit ese= {
+                'content': 'Məsmuatİdareetməs)',
+        'prodcs': 'Məsllr İdrətməi',
+         // Gi'moderatorf': 'Modoratorlar'
+       u    };
+    document.getElementById('login-fotab.tatleventListener(' titles[tab];
+            
+          s if (tab === 'productb') loadPioducts();
         }
 
+        // Məhsull rı Yükeə => {
+        function loadProducts() {
+        e.preventDefprodu)s
+                const list = document.getElementById('products-list');
+                list.innerHTML = '';
+      const em  ail = document.getElementById('email').value;
+            consif (!data) {
+                    list.innerHTMLt= '<ppclass="text-slate-400astalic text-sm">Hələ məhsul yoxdur.</p>';
+                    return;
+                }
+                Object.keys= docu.forEach(id =>me
+                    const p = data[id];
+                    list.innerHTML += `nt.getElementById('password').value;
+<iv class="flex items-center justify-between p-4 bg-slate-50 rnded-xl border border-slate-100">
+                            <div class="flex ites-cer gap-4">
+                                <img src="${pimage}" class="w-12 h-12 rounded-lg object-cover b-slate-200">
+                                <div>
+                                    <h4 class="font-bold tx-sat-800">${p.na}</h4>
+                                    <p class="text-xs text-slate-500">${p.desc.substrig(0, 50)}...</p>
+                                </div>
+                            </div>
+                            <div class="flex gap-2">
+                                <button onclick="ediProuct${i}')" class="p-2 text-lue600 over:bg-blue-50 roundd-lg tansitinall"><i class="fas fa-edi"></></button>
+                                <buton onclick="deetProduct(${id}'" class="p-2 text-red-600 hoer:bg-red-50 rondd-lgtransition-all"><i class"fasf-rs"></i></button>
+                            </div>
+                        </div>
+                    `;
+                });
+            });
+        }
+
+        // Məhsul Sil
+        window.dletePduc = (d) => {
+            if (confirm('Bu məhsulu silmək isədiyinizə əminsiniz?')) {
+                db.ref('products/' + id).remove();
+            }
+        };
+
+        // Məhsu RdaktəEt
+       window.editProduct = (id) => {
+            db.ref(products/ + id).once('value', snapshot => {
+            authconst.ps=isnapshot.val();
+gnInW           ithEmailAndPassword(emailps)dc-di;
+                documengElemenById('prod-name').vau=p.name
+                document.getElementById('prod-desc').value.=tp.desc;
+hen(()           => {promagp.imge;
+                documen.getElementById('cncel-edit')clssList.remve('hidden');
+                docmen.geElementById('save-product').nnerTex = 'Ynilə';
+              window.scrollTo({ top: 0, behavior: smooth })
+            });
+        };
+
+docu    ment.getElementById('logicancelsedit').eddEventListener('click', () => {
+            resetProductForm();
+        });
+
+        function resetProductForm() {
+            dtcimeno.ge'Elem)ntById('producclidssList.add '';
+           ('ocument.getElemeniById('prod-ndme')dvel)=
+            document.getElementById('prod-desc').value = '';
+            document.getElementById('prod-image').value = '';
+            document.getElementById('cancel-edit').classList.add('hidden')
+            document.getElementById('save-product').innerText = 'Yadda Saxla';   .catch(err => {
+                  const errorMsg = document.getElementById('login-error');
+                    errorMsg.innerText = "Xəta: Email və ya şifrə yanlışdır!";
+           Məhsul       S  erlassList.remove('hidden');
+                });produ
+        });ipductd;
+     // ÇıxıconstşpdcDaa = {
+                nampdnam
+        documentdtscById('logout-btn').addEventproL(dcsck', () => {
+            authim.gthen(() => location.reload()pro)img
+        });
+
+i !produDaanm || !rouctDa.imag {
+      // Tab kZhmtmsA və Şəkilhisəərii dourun;
+                return;
+            }
+
+    functionsonso rbfab id ? db.rf('poducs/ + id) :d.rf('poucts').push();
+         rfst(productDat
+                .then((  => { document.getElementById('content-tab').classList.add('hidden');
+                    re etP   uc For ();     document.getElementById('tab-title').innerText = tab === 'content' ? 'Məzmun İdarəetməsi' : 'Moderatorlar';
+                }alert(i ? 'Məhsl yiəndi!' : 'Yni əhsul əlavə di!);
+                }
+            .ach(rr=>let('Xa: +.messge))
+);
         // Məlumatları bazadan yükləyirik
         auth.onAuthStateChanged(user => {
             if (user) {
@@ -189,4 +294,5 @@
         });
     </script>
 </body>
+</html>
 </html>
