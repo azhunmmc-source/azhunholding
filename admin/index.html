@@ -5,12 +5,14 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <meta name="robots" content="noindex" />
   <title>Azhunholding - Admin Panel</title>
+  <!-- 1. Əvvəlcə Identity Widget yüklənir -->
   <script src="https://identity.netlify.com/v1/netlify-identity-widget.js"></script>
 </head>
 <body>
-  <script src="https://unpkg.com/decap-cms@^3.0.0/dist/decap-cms.js"></script>
   <script>
-    // Netlify Identity-ni CMS üçün hazır vəziyyətə gətiririk
+    // 2. CMS yüklənməzdən əvvəl Identity-ni CMS-ə bağlayırıq
+    window.netlifyIdentityWidget = window.netlifyIdentity;
+    
     if (window.netlifyIdentity) {
       window.netlifyIdentity.on("init", user => {
         if (!user) {
@@ -21,5 +23,7 @@
       });
     }
   </script>
+  <!-- 3. ƏN SONDA Admin Panel (Decap CMS) yüklənir -->
+  <script src="https://unpkg.com/decap-cms@^3.0.0/dist/decap-cms.js"></script>
 </body>
 </html>
