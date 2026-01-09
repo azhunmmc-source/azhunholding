@@ -6,15 +6,15 @@
   <meta name="robots" content="noindex" />
   <title>Azhunholding - Admin Panel</title>
   <script src="https://identity.netlify.com/v1/netlify-identity-widget.js"></script>
-</head>
-<body>
-  <script src="https://unpkg.com/decap-cms@^3.0.0/dist/decap-cms.js"></script>
   <script>
     // Bu kod admin panelin Netlify-ı tanımasını təmin edir
     if (window.location.hostname !== 'localhost') {
       window.netlifyIdentityWidget = window.netlifyIdentity;
     }
   </script>
+</head>
+<body>
+  <script src="https://unpkg.com/decap-cms@^3.0.0/dist/decap-cms.js"></script>
   <script>
     if (window.netlifyIdentity) {
       window.netlifyIdentity.on("init", user => {
