@@ -1,0 +1,20 @@
+source: /
+output: /
+
+collections_config:
+  pages:
+    name: Səhifələr
+    path: /
+    parser: html
+    filter:
+      base: none
+      include:
+        - index.html
+
+paths:
+  static: /
+  uploads: videos
+  dam_uploads: videos
+
+editor:
+  default_item_editor: visual
