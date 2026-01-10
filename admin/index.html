@@ -3,345 +3,335 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>AZHUN - Admin Panel</title>
+    <title>Admin Panel - Azhunholding</title>
     <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700&display=swap" rel="stylesheet">
+    
     <!-- Firebase SDK -->
     <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-auth-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-database-compat.js"></script>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-storage-compat.js"></script>
+
+
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        primary: '#1a1a1a',
+                        secondary: '#C5A059',
+                        dark: '#0f0f0f',
+                        light: '#f4f4f4',
+                        sidebar: '#1e1e2d',
+                        active: '#2b2b40'
+                    },
+                    fontFamily: {
+                        sans: ['Manrope', 'sans-serif'],
+                    }
+                }
+            }
+        }
+    </script>
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Manrope:wght@400;600;700&display=swap');
-        body { font-family: 'Manrope', sans-serif; }
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar { width: 6px; height: 6px; }
+        ::-webkit-scrollbar-track { background: #1e1e2d; }
+        ::-webkit-scrollbar-thumb { background: #3f3f50; border-radius: 3px; }
+        ::-webkit-scrollbar-thumb:hover { background: #C5A059; }
+        
+        .nav-item.active {
+            background-color: #2b2b40;
+            border-left: 3px solid #C5A059;
+            color: #fff;
+        }
+        
+        .loader {
+            border: 3px solid #f3f3f3;
+            border-radius: 50%;
+            border-top: 3px solid #C5A059;
+            width: 20px;
+            height: 20px;
+            -webkit-animation: spin 1s linear infinite; /* Safari */
+            animation: spin 1s linear infinite;
+        }
+        
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        #auth-container { background-color: #0f0f0f; }
     </style>
 </head>
-<body class="bg-slate-50 text-slate-900">
+<body class="bg-light font-sans text-gray-800 h-screen flex overflow-hidden">
 
-    <!-- Login Səhifəsi -->
-    <div id="login-section" class="min-h-screen flex items-center justify-center p-6">
-        <div class="max-w-md w-full bg-white rounded-2xl shadow-xl p-8 border border-slate-100">
+    <!-- Auth Container (Login) -->
+    <div id="auth-container" class="fixed inset-0 z-50 bg-dark bg-black bg-gray-900 flex items-center justify-center">
+        <div class="bg-sidebar p-8 rounded-2xl shadow-2xl w-full max-w-md border border-gray-700">
             <div class="text-center mb-8">
-                <h1 class="text-3xl font-bold text-slate-800 tracking-tight">AZHUN</h1>
-                <p class="text-slate-500 mt-2 text-sm uppercase tracking-widest font-semibold">Admin Girişi</p>
+                <h2 class="text-3xl font-bold text-white mb-2">Admin Girişi</h2>
+                <p class="text-gray-400 text-sm">İdarəetmə panelinə xoş gəlmisiniz</p>
             </div>
-            
-            <form id="login-form" class="space-y-4">
+            <form id="login-form" class="space-y-6">
                 <div>
-                    <label class="block text-sm font-bold text-slate-700 mb-1">Email</label>
-                    <input type="email" id="email" class="w-full px-4 py-3 rounded-xl border border-slate-200 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition-all" placeholder="admin@azhunholding.com" required>
+                    <label class="block text-gray-400 text-sm font-bold mb-2">E-poçt</label>
+                    <div class="relative">
+                        <i class="fas fa-envelope absolute left-3 top-3.5 text-gray-500"></i>
+                        <input type="email" id="email" class="w-full bg-dark border border-gray-600 text-white pl-10 pr-4 py-3 rounded-lg focus:outline-none focus:border-secondary transition-colors" placeholder="admin@azhunholding.com" required>
+                    </div>
                 </div>
                 <div>
-                    <label class="block text-sm font-bold text-slate-700 mb-1">Şifrə</label>
-                    <input type="password" id="password" class="w-full px-4 py-3 rounded-xl border border-slate-200 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition-all" placeholder="••••••••" required>
+                    <label class="block text-gray-400 text-sm font-bold mb-2">Şifrə</label>
+                    <div class="relative">
+                        <i class="fas fa-lock absolute left-3 top-3.5 text-gray-500"></i>
+                        <input type="password" id="password" class="w-full bg-dark border border-gray-600 text-white pl-10 pr-4 py-3 rounded-lg focus:outline-none focus:border-secondary transition-colors" placeholder="••••••••" required>
+                    </div>
                 </div>
-                <button type="submit" class="w-full bg-slate-900 text-white font-bold py-3 rounded-xl hover:bg-slate-800 transition-all shadow-lg active:scale-[0.98]">Daxil Ol</button>
+                <div id="login-error" class="text-red-500 text-sm text-center hidden"></div>
+                <button type="submit" class="w-full bg-secondary hover:bg-yellow-600 text-white font-bold py-3 rounded-lg transition-all transform hover:scale-[1.02]">
+                    Daxil Ol
+                </button>
             </form>
-            <p id="login-error" class="text-red-500 text-sm mt-4 text-center hidden font-medium"></p>
         </div>
     </div>
 
-    <!-- Dashboard (Daxil olandan sonra) -->
-    <div id="admin-section" class="hidden min-h-screen flex flex-col md:flex-row">
-        <!-- Sidebar -->
-        <aside class="w-full md:w-64 bg-slate-900 text-white p-6 flex flex-col">
-            <h2 class="text-xl font-bold mb-10 tracking-widest text-center md:text-left">AZHUN</h2>
-            <nav class="space-y-2 flex-1">
-                <button onclick="showTab('content')" class="w-full text-left px-4 py-3 rounded-lg hover:bg-slate-800 transition-all font-medium">Məzmun İdarəetməsi</button>
-                <button onclick="showTab('products')" class="w-full text-left px-4 py-3 rounded-lg hover:bg-slate-800 transition-all font-medium">Məhsullar</button>
-                <button onclick="showTab('moderators')" class="w-full text-left px-4 py-3 rounded-lg hover:bg-slate-800 transition-all font-medium">Moderatorlar</button>
-            </nav>
-            <button id="logout-btn" class="mt-10 md:mt-auto px-4 py-3 text-slate-400 hover:text-white transition-all text-left font-medium">
-                <i class="fas fa-sign-out-alt mr-2"></i> Çıxış Et
+    <!-- Sidebar -->
+    <aside id="sidebar" class="w-64 bg-sidebar text-gray-400 flex flex-col transition-all duration-300 hidden">
+        <div class="h-20 flex items-center px-8 border-b border-gray-700/50">
+            <h1 class="text-xl font-bold text-white tracking-wider">AZHUN <span class="text-secondary text-xs">ADMIN</span></h1>
+        </div>
+        
+        <nav class="flex-1 overflow-y-auto py-6 space-y-1">
+            <a href="#" onclick="switchTab('dashboard')" class="nav-item active flex items-center px-8 py-3 hover:bg-active hover:text-white transition-colors">
+                <i class="fas fa-chart-pie w-6"></i>
+                <span class="font-medium">İcmal</span>
+            </a>
+            <a href="#" onclick="switchTab('general')" class="nav-item flex items-center px-8 py-3 hover:bg-active hover:text-white transition-colors">
+                <i class="fas fa-sliders-h w-6"></i>
+                <span class="font-medium">Ümumi Məlumatlar</span>
+            </a>
+            <a href="#" onclick="switchTab('categories')" class="nav-item flex items-center px-8 py-3 hover:bg-active hover:text-white transition-colors">
+                <i class="fas fa-layer-group w-6"></i>
+                <span class="font-medium">Bölmələr (Kateqoriyalar)</span>
+            </a>
+            <a href="#" onclick="switchTab('products')" class="nav-item flex items-center px-8 py-3 hover:bg-active hover:text-white transition-colors">
+                <i class="fas fa-box-open w-6"></i>
+                <span class="font-medium">Məhsullar</span>
+            </a>
+        </nav>
+
+        <div class="p-6 border-t border-gray-700/50">
+            <button onclick="logout()" class="flex items-center text-red-400 hover:text-red-300 transition-colors text-sm font-medium">
+                <i class="fas fa-sign-out-alt mr-3"></i> Çıxış
             </button>
-        </aside>
+        </div>
+    </aside>
 
-        <!-- Main Content -->
-        <main class="flex-1 p-6 md:p-10 overflow-y-auto">
-            <header class="flex flex-col md:flex-row justify-between items-start md:items-center mb-10 gap-4">
-                <h2 id="tab-title" class="text-2xl md:text-3xl font-bold text-slate-800">Məzmun İdarəetməsi</h2>
-                <span id="user-info" class="text-xs font-bold text-slate-500 bg-slate-200 px-4 py-2 rounded-full">Moderator</span>
-            </header>
+    <!-- Main Content -->
+    <main id="main-content" class="flex-1 flex flex-col overflow-hidden hidden">
+        <!-- Header -->
+        <header class="h-20 bg-white border-b border-gray-200 flex items-center justify-between px-8 shadow-sm z-10">
+            <h2 id="page-title" class="text-2xl font-bold text-primary">İcmal</h2>
+            <div class="flex items-center space-x-4">
+                <a href="/" target="_blank" class="px-4 py-2 bg-gray-100 text-gray-600 rounded-lg text-sm font-bold hover:bg-gray-200 transition-colors">
+                    <i class="fas fa-external-link-alt mr-2"></i> Sayta Bax
+                </a>
+                <div class="w-10 h-10 rounded-full bg-secondary/10 flex items-center justify-center text-secondary font-bold">
+                    A
+                </div>
+            </div>
+        </header>
 
-            <!-- Content Tab -->
-            <div id="content-tab" class="space-y-6 max-w-4xl">
-                <div class="bg-white p-6 md:p-8 rounded-2xl border border-slate-100 shadow-sm space-y-4">
-                    <h3 class="text-lg font-bold text-slate-800 border-b pb-2 mb-4">Ana Səhifə (Hero)</h3>
-                    <div class="grid grid-cols-1 gap-4">
-                        <div>
-                            <label class="block text-xs font-bold text-slate-500 uppercase mb-1">Ana Başlıq</label>
-                            <input type="text" id="db-hero-title" class="w-full px-4 py-3 rounded-xl border border-slate-200 focus:ring-2 focus:ring-blue-500 outline-none">
+        <!-- Scrollable Content -->
+        <div id="content-area" class="flex-1 overflow-y-auto p-8 bg-gray-50">
+            
+            <!-- Dashboard View -->
+            <div id="view-dashboard" class="space-y-6">
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                    <div class="bg-white p-6 rounded-xl shadow-sm border border-gray-100">
+                        <div class="flex justify-between items-start">
+                            <div>
+                                <p class="text-sm text-gray-500 font-bold uppercase">Məhsul Sayı</p>
+                                <h3 class="text-3xl font-bold text-primary mt-2" id="stat-products">0</h3>
+                            </div>
+                            <div class="p-3 bg-blue-50 text-blue-500 rounded-lg">
+                                <i class="fas fa-box text-xl"></i>
+                            </div>
                         </div>
-                        <div>
-                            <label class="block text-xs font-bold text-slate-500 uppercase mb-1">Alt Başlıq</label>
-                            <textarea id="db-hero-subtitle" rows="3" class="w-full px-4 py-3 rounded-xl border border-slate-200 focus:ring-2 focus:ring-blue-500 outline-none"></textarea>
+                    </div>
+                    <div class="bg-white p-6 rounded-xl shadow-sm border border-gray-100">
+                        <div class="flex justify-between items-start">
+                            <div>
+                                <p class="text-sm text-gray-500 font-bold uppercase">Bölmə Sayı</p>
+                                <h3 class="text-3xl font-bold text-primary mt-2" id="stat-categories">0</h3>
+                            </div>
+                            <div class="p-3 bg-purple-50 text-purple-500 rounded-lg">
+                                <i class="fas fa-layer-group text-xl"></i>
+                            </div>
                         </div>
                     </div>
                 </div>
-
-                <div class="bg-white p-6 md:p-8 rounded-2xl border border-slate-100 shadow-sm space-y-4">
-                    <h3 class="text-lg font-bold text-slate-800 border-b pb-2 mb-4">Haqqımızda</h3>
-                    <div>
-                        <label class="block text-xs font-bold text-slate-500 uppercase mb-1">Bölmə Başlığı</label>
-                        <input type="text" id="db-about-title" class="w-full px-4 py-3 rounded-xl border border-slate-200 focus:ring-2 focus:ring-blue-500 outline-none">
-                    </div>
-                    <div>
-                        <label class="block text-xs font-bold text-slate-500 uppercase mb-1">Əsas Mətn</label>
-                        <textarea id="db-about-text-1" rows="4" class="w-full px-4 py-3 rounded-xl border border-slate-200 focus:ring-2 focus:ring-blue-500 outline-none"></textarea>
-                    </div>
-                </div>
-
-                <button id="save-content" class="w-full md:w-auto bg-blue-600 text-white font-bold px-8 py-4 rounded-xl hover:bg-blue-700 transition-all shadow-lg shadow-blue-200 active:scale-95">Dəyişiklikləri Yadda Saxla</button>
             </div>
 
-            <!-- Products Tab -->
-            <div id="products-tab" class="hidden space-y-6 max-w-4xl">
-                <div class="bg-white p-6 md:p-8 rounded-2xl border border-slate-100 shadow-sm">
-                    <h3 class="text-lg font-bold text-slate-800 mb-6">Yeni Məhsul Əlavə Et</h3>
+            <!-- General Settings View -->
+            <div id="view-general" class="hidden max-w-4xl">
+                <div class="bg-white rounded-xl shadow-sm border border-gray-100 p-8 mb-6">
+                    <h3 class="text-lg font-bold text-primary mb-6 border-b pb-4">Ana Səhifə (Hero)</h3>
                     <div class="space-y-4">
-                        <input type="hidden" id="product-id">
                         <div>
-                            <label class="block text-xs font-bold text-slate-500 uppercase mb-1">Məhsulun Adı</label>
-                            <input type="text" id="prod-name" class="w-full px-4 py-3 rounded-xl border border-slate-200 focus:ring-2 focus:ring-blue-500 outline-none">
+                            <label class="block text-sm font-bold text-gray-700 mb-2">Başlıq</label>
+                            <input type="text" id="input-hero-title" class="w-full border border-gray-300 rounded-lg px-4 py-2 focus:ring-2 focus:ring-secondary focus:border-transparent">
                         </div>
                         <div>
-                            <label class="block text-xs font-bold text-slate-500 uppercase mb-1">Təsviri</label>
-                            <textarea id="prod-desc" rows="2" class="w-full px-4 py-3 rounded-xl border border-slate-200 focus:ring-2 focus:ring-blue-500 outline-none"></textarea>
-                        </div>
-                        <div>
-                            <label class="block text-xs font-bold text-slate-500 uppercase mb-1">Şəkil URL</label>
-                            <input type="text" id="prod-image" class="w-full px-4 py-3 rounded-xl border border-slate-200 focus:ring-2 focus:ring-blue-500 outline-none" placeholder="https://images.unsplash.com/...">
-                        </div>
-                        <div class="flex gap-2">
-                            <button id="save-product" class="bg-blue-600 text-white font-bold px-8 py-3 rounded-xl hover:bg-blue-700 transition-all">Yadda Saxla</button>
-                            <button id="cancel-edit" class="hidden bg-slate-200 text-slate-700 font-bold px-8 py-3 rounded-xl hover:bg-slate-300 transition-all">Ləğv Et</button>
+                            <label class="block text-sm font-bold text-gray-700 mb-2">Alt Başlıq</label>
+                            <textarea id="input-hero-subtitle" rows="2" class="w-full border border-gray-300 rounded-lg px-4 py-2 focus:ring-2 focus:ring-secondary focus:border-transparent"></textarea>
                         </div>
                     </div>
                 </div>
 
-                <div class="bg-white p-6 md:p-8 rounded-2xl border border-slate-100 shadow-sm">
-                    <h3 class="text-lg font-bold text-slate-800 mb-6">Mövcud Məhsullar</h3>
-                    <div id="products-list" class="grid grid-cols-1 gap-4">
-                        <p class="text-slate-400 italic text-sm">Yüklənir...</p>
+                <div class="bg-white rounded-xl shadow-sm border border-gray-100 p-8">
+                    <h3 class="text-lg font-bold text-primary mb-6 border-b pb-4">Haqqımızda</h3>
+                    <div class="space-y-4">
+                        <div>
+                            <label class="block text-sm font-bold text-gray-700 mb-2">Bölmə Başlığı</label>
+                            <input type="text" id="input-about-title" class="w-full border border-gray-300 rounded-lg px-4 py-2 focus:ring-2 focus:ring-secondary focus:border-transparent">
+                        </div>
+                        <div>
+                            <label class="block text-sm font-bold text-gray-700 mb-2">Mətn 1</label>
+                            <textarea id="input-about-text-1" rows="3" class="w-full border border-gray-300 rounded-lg px-4 py-2 focus:ring-2 focus:ring-secondary focus:border-transparent"></textarea>
+                        </div>
+                        <div>
+                            <label class="block text-sm font-bold text-gray-700 mb-2">Mətn 2</label>
+                            <textarea id="input-about-text-2" rows="3" class="w-full border border-gray-300 rounded-lg px-4 py-2 focus:ring-2 focus:ring-secondary focus:border-transparent"></textarea>
+                        </div>
                     </div>
+                </div>
+
+                <div class="mt-6 flex justify-end">
+                    <button onclick="saveGeneralSettings()" id="btn-save-general" class="bg-secondary text-white px-8 py-3 rounded-lg font-bold hover:bg-yellow-600 transition-colors flex items-center">
+                        <span class="mr-2">Yadda Saxla</span>
+                        <div class="loader hidden"></div>
+                    </button>
                 </div>
             </div>
 
-            <!-- Moderators Tab -->
-            <div id="moderators-tab" class="hidden space-y-6 max-w-4xl">
-                <div class="bg-white p-6 md:p-8 rounded-2xl border border-slate-100 shadow-sm">
-                    <h3 class="text-lg font-bold text-slate-800 mb-6">Yeni Moderator Əlavə Et</h3>
-                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                        <div>
-                            <label class="block text-xs font-bold text-slate-500 uppercase mb-1">Email</label>
-                            <input type="email" id="new-mod-email" class="w-full px-4 py-3 rounded-xl border border-slate-200 focus:ring-2 focus:ring-blue-500 outline-none">
-                        </div>
-                        <div>
-                            <label class="block text-xs font-bold text-slate-500 uppercase mb-1">Şifrə</label>
-                            <input type="password" id="new-mod-password" class="w-full px-4 py-3 rounded-xl border border-slate-200 focus:ring-2 focus:ring-blue-500 outline-none">
-                        </div>
-                    </div>
-                    <button id="add-mod" class="mt-6 bg-slate-900 text-white font-bold px-8 py-3 rounded-xl hover:bg-slate-800 transition-all">Moderator Yarat</button>
+            <!-- Categories View -->
+            <div id="view-categories" class="hidden">
+                <div class="flex justify-between items-center mb-6">
+                    <h3 class="text-lg font-bold text-gray-700">Mövcud Bölmələr</h3>
+                    <button onclick="openCategoryModal()" class="bg-primary text-white px-6 py-2 rounded-lg font-bold hover:bg-gray-800 transition-colors text-sm">
+                        <i class="fas fa-plus mr-2"></i> Yeni Bölmə
+                    </button>
+                </div>
+                
+                <div class="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden">
+                    <table class="w-full text-left">
+                        <thead class="bg-gray-50 text-gray-500 uppercase text-xs">
+                            <tr>
+                                <th class="px-6 py-4">Ad</th>
+                                <th class="px-6 py-4 text-right">Əməliyyatlar</th>
+                            </tr>
+                        </thead>
+                        <tbody id="categories-table-body" class="divide-y divide-gray-100">
+                            <!-- Categories will be loaded here -->
+                        </tbody>
+                    </table>
                 </div>
             </div>
-        </main>
+
+            <!-- Products View -->
+            <div id="view-products" class="hidden">
+                <div class="flex justify-between items-center mb-6">
+                    <h3 class="text-lg font-bold text-gray-700">Mövcud Məhsullar</h3>
+                    <button onclick="openProductModal()" class="bg-primary text-white px-6 py-2 rounded-lg font-bold hover:bg-gray-800 transition-colors text-sm">
+                        <i class="fas fa-plus mr-2"></i> Yeni Məhsul
+                    </button>
+                </div>
+
+                <div class="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden">
+                    <table class="w-full text-left">
+                        <thead class="bg-gray-50 text-gray-500 uppercase text-xs">
+                            <tr>
+                                <th class="px-6 py-4">Şəkil</th>
+                                <th class="px-6 py-4">Ad</th>
+                                <th class="px-6 py-4">Bölmə</th>
+                                <th class="px-6 py-4">Qiymət</th>
+                                <th class="px-6 py-4 text-right">Əməliyyatlar</th>
+                            </tr>
+                        </thead>
+                        <tbody id="products-table-body" class="divide-y divide-gray-100">
+                            <!-- Products will be loaded here -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+        </div>
+    </main>
+
+    <!-- Modals -->
+    <!-- Category Modal -->
+    <div id="modal-category" class="fixed inset-0 z-50 bg-black/50 hidden flex items-center justify-center">
+        <div class="bg-white rounded-xl shadow-2xl w-full max-w-md p-8 m-4">
+            <h3 class="text-xl font-bold mb-6" id="modal-cat-title">Yeni Bölmə</h3>
+            <input type="hidden" id="cat-id">
+            <div class="space-y-4">
+                <div>
+                    <label class="block text-sm font-bold text-gray-700 mb-2">Bölmə Adı</label>
+                    <input type="text" id="cat-name" class="w-full border border-gray-300 rounded-lg px-4 py-2">
+                </div>
+            </div>
+            <div class="flex justify-end space-x-3 mt-8">
+                <button onclick="closeModal('modal-category')" class="px-4 py-2 text-gray-500 hover:text-gray-700">Ləğv et</button>
+                <button onclick="saveCategory()" class="bg-secondary text-white px-6 py-2 rounded-lg font-bold">Yadda Saxla</button>
+            </div>
+        </div>
     </div>
 
-    <script>
-        // Firebase Config
-        const firebaseConfig = {
-            apiKey: "AIzaSyALBZ03IAWaWvHmVX-9zF2GVbIeBWmV_OA",
-            authDomain: "azhunholding-20283.firebaseapp.com",
-            databaseURL: "https://azhunholding-20283-default-rtdb.firebaseio.com",
-            projectId: "azhunholding-20283",
-            storageBucket: "azhunholding-20283.firebasestorage.app",
-            messagingSenderId: "525857337022",
-            appId: "1:525857337022:web:d2c581cc707d270a7c3bef",
-            measurementId: "G-GCJYX2WNKK"
-        };
+    <!-- Product Modal -->
+    <div id="modal-product" class="fixed inset-0 z-50 bg-black/50 hidden flex items-center justify-center">
+        <div class="bg-white rounded-xl shadow-2xl w-full max-w-lg p-8 m-4 max-h-[90vh] overflow-y-auto">
+            <h3 class="text-xl font-bold mb-6" id="modal-prod-title">Yeni Məhsul</h3>
+            <input type="hidden" id="prod-id">
+            <div class="space-y-4">
+                <div>
+                    <label class="block text-sm font-bold text-gray-700 mb-2">Şəkil URL</label>
+                    <input type="text" id="prod-image" class="w-full border border-gray-300 rounded-lg px-4 py-2" placeholder="https://...">
+                </div>
+                <div>
+                    <label class="block text-sm font-bold text-gray-700 mb-2">Məhsul Adı</label>
+                    <input type="text" id="prod-name" class="w-full border border-gray-300 rounded-lg px-4 py-2">
+                </div>
+                <div>
+                    <label class="block text-sm font-bold text-gray-700 mb-2">Bölmə</label>
+                    <select id="prod-category" class="w-full border border-gray-300 rounded-lg px-4 py-2">
+                        <!-- Options populated by JS -->
+                    </select>
+                </div>
+                <div>
+                    <label class="block text-sm font-bold text-gray-700 mb-2">Təsvir</label>
+                    <textarea id="prod-desc" rows="3" class="w-full border border-gray-300 rounded-lg px-4 py-2"></textarea>
+                </div>
+                <div>
+                    <label class="block text-sm font-bold text-gray-700 mb-2">Qiymət</label>
+                    <input type="text" id="prod-price" class="w-full border border-gray-300 rounded-lg px-4 py-2" placeholder="Məs: 10.00 AZN">
+                </div>
+            </div>
+            <div class="flex justify-end space-x-3 mt-8">
+                <button onclick="closeModal('modal-product')" class="px-4 py-2 text-gray-500 hover:text-gray-700">Ləğv et</button>
+                <button onclick="saveProduct()" class="bg-secondary text-white px-6 py-2 rounded-lg font-bold">Yadda Saxla</button>
+            </div>
+        </div>
+    </div>
 
-        // Firebase-i işə salırıq
-        firebase.initializeApp(firebaseConfig);
-        const auth = firebase.auth();
-        const db = firebase.database();
+    <!-- Notification -->
+    <div id="notification" class="fixed bottom-5 right-5 bg-sidebar text-white px-6 py-4 rounded-lg shadow-xl transform translate-y-20 transition-transform duration-300 z-[60] border-l-4 border-secondary flex items-center">
+        <i class="fas fa-check-circle text-secondary mr-3 text-xl"></i>
+        <span id="notification-msg" class="font-medium">Əməliyyat uğurla tamamlandı</span>
+    </div>
 
-        // UI Təzələmə
-        auth.onAuthStateChanged(user => {
-            if (user) {
-                document.getElementById('login-section').classList.add('hidden');
-                document.getElementById('admin-section').classList.remove('hidden');
-                document.getElementById('user-info').innerText = user.email;
-                showTab('content'); // Default tab
-                loadContent();
-            } else {
-                document.getElementById('login-section').classList.remove('hidden');
-                document.getElementById('admin-section').classList.add('hidden');
-            }
-        });
-
-        // Giriş
-        document.getElementById('login-form').addEventListener('submit', (e) => {
-            e.preventDefault();
-            const email = document.getElementById('email').value;
-            const pass = document.getElementById('password').value;
-            const errorMsg = document.getElementById('login-error');
-            const btn = e.target.querySelector('button');
-
-            btn.disabled = true;
-            btn.innerText = "Giriş edilir...";
-            errorMsg.classList.add('hidden');
-
-            auth.signInWithEmailAndPassword(email, pass)
-                .catch(err => {
-                    btn.disabled = false;
-                    btn.innerText = "Daxil Ol";
-                    errorMsg.innerText = "Xəta: Email və ya şifrə yanlışdır!";
-                    errorMsg.classList.remove('hidden');
-                });
-        });
-
-        // Çıxış
-        document.getElementById('logout-btn').addEventListener('click', () => {
-            auth.signOut().then(() => location.reload());
-        });
-
-        // Tab keçidləri
-        function showTab(tab) {
-            const tabs = ['content', 'products', 'moderators'];
-            tabs.forEach(t => document.getElementById(t + '-tab').classList.add('hidden'));
-            document.getElementById(tab + '-tab').classList.remove('hidden');
-            
-            // Sidebar active style
-            const buttons = document.querySelectorAll('aside nav button');
-            buttons.forEach(btn => {
-                btn.classList.remove('bg-slate-800');
-                if (btn.getAttribute('onclick').includes(`'${tab}'`)) {
-                    btn.classList.add('bg-slate-800');
-                }
-            });
-
-            const titles = {
-                'content': 'Məzmun İdarəetməsi',
-                'products': 'Məhsullar İdarəetməsi',
-                'moderators': 'Moderatorlar'
-            };
-            document.getElementById('tab-title').innerText = titles[tab];
-            
-            if (tab === 'products') loadProducts();
-        }
-
-        // Məzmunu Yüklə
-        function loadContent() {
-            db.ref('site_content').once('value', snapshot => {
-                const data = snapshot.val();
-                if (data) {
-                    document.getElementById('db-hero-title').value = data.hero_title || '';
-                    document.getElementById('db-hero-subtitle').value = data.hero_subtitle || '';
-                    document.getElementById('db-about-title').value = data.about_title || '';
-                    document.getElementById('db-about-text-1').value = data.about_text_1 || '';
-                }
-            });
-        }
-
-        // Məzmunu Yadda Saxla
-        document.getElementById('save-content').addEventListener('click', () => {
-            const updates = {
-                hero_title: document.getElementById('db-hero-title').value,
-                hero_subtitle: document.getElementById('db-hero-subtitle').value,
-                about_title: document.getElementById('db-about-title').value,
-                about_text_1: document.getElementById('db-about-text-1').value
-            };
-            db.ref('site_content').update(updates)
-                .then(() => alert('Uğurla yadda saxlanıldı!'))
-                .catch(err => alert('Xəta: ' + err.message));
-        });
-
-        // Məhsulları Yüklə
-        function loadProducts() {
-            db.ref('products').on('value', snapshot => {
-                const list = document.getElementById('products-list');
-                list.innerHTML = '';
-                const data = snapshot.val();
-                if (!data) {
-                    list.innerHTML = '<p class="text-slate-400 italic text-sm">Hələ məhsul yoxdur.</p>';
-                    return;
-                }
-                Object.keys(data).forEach(id => {
-                    const p = data[id];
-                    list.innerHTML += `
-                        <div class="flex items-center justify-between p-4 bg-slate-50 rounded-xl border border-slate-100">
-                            <div class="flex items-center gap-4">
-                                <img src="${p.image}" class="w-12 h-12 rounded-lg object-cover bg-slate-200">
-                                <div>
-                                    <h4 class="font-bold text-slate-800">${p.name}</h4>
-                                    <p class="text-xs text-slate-500">${p.desc ? p.desc.substring(0, 50) + '...' : ''}</p>
-                                </div>
-                            </div>
-                            <div class="flex gap-2">
-                                <button onclick="editProduct('${id}')" class="p-2 text-blue-600 hover:bg-blue-50 rounded-lg transition-all"><i class="fas fa-edit"></i></button>
-                                <button onclick="deleteProduct('${id}')" class="p-2 text-red-600 hover:bg-red-50 rounded-lg transition-all"><i class="fas fa-trash"></i></button>
-                            </div>
-                        </div>
-                    `;
-                });
-            });
-        }
-
-        // Məhsul Sil
-        window.deleteProduct = (id) => {
-            if (confirm('Silsin?')) db.ref('products/' + id).remove();
-        };
-
-        // Məhsul Redaktə
-        window.editProduct = (id) => {
-            db.ref('products/' + id).once('value', snapshot => {
-                const p = snapshot.val();
-                document.getElementById('product-id').value = id;
-                document.getElementById('prod-name').value = p.name;
-                document.getElementById('prod-desc').value = p.desc;
-                document.getElementById('prod-image').value = p.image;
-                document.getElementById('cancel-edit').classList.remove('hidden');
-                document.getElementById('save-product').innerText = 'Yenilə';
-                window.scrollTo({ top: 0, behavior: 'smooth' });
-            });
-        };
-
-        // Məhsul Yadda Saxla
-        document.getElementById('save-product').addEventListener('click', () => {
-            const id = document.getElementById('product-id').value;
-            const data = {
-                name: document.getElementById('prod-name').value,
-                desc: document.getElementById('prod-desc').value,
-                image: document.getElementById('prod-image').value
-            };
-            if (!data.name || !data.image) return alert('Ad və Şəkil vacibdir!');
-            const ref = id ? db.ref('products/' + id) : db.ref('products').push();
-            ref.set(data).then(() => {
-                resetProductForm();
-                alert('Məlumat yeniləndi!');
-            });
-        });
-
-        document.getElementById('cancel-edit').addEventListener('click', resetProductForm);
-
-        function resetProductForm() {
-            document.getElementById('product-id').value = '';
-            document.getElementById('prod-name').value = '';
-            document.getElementById('prod-desc').value = '';
-            document.getElementById('prod-image').value = '';
-            document.getElementById('cancel-edit').classList.add('hidden');
-            document.getElementById('save-product').innerText = 'Yadda Saxla';
-        }
-
-        // Moderator Yarat
-        document.getElementById('add-mod').addEventListener('click', () => {
-            const email = document.getElementById('new-mod-email').value;
-            const pass = document.getElementById('new-mod-password').value;
-            if (!email || !pass) return alert('Məlumatları doldurun!');
-            
-            // Firebase Auth-da yaratmaq üçün secondary app və ya admin sdk lazımdır,
-            // lakin biz sadəcə bazaya qeyd edə bilərik (və ya Firebase Console-dan manual əlavə edilməlidir).
-            alert('Yeni moderator Firebase Console-dan "Authentication" bölməsindən əlavə edilməlidir.');
-        });
-    </script>
+    <!-- Scripts -->
+    <script src="admin.v2.js?v=2.0"></script>
 </body>
 </html>

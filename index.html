@@ -174,13 +174,13 @@
                 </div>
                 <div class="lg:w-1/2" data-aos="fade-left">
                     <span class="text-secondary font-bold tracking-widest uppercase text-sm mb-2 block">Şirkət Haqqında</span>
-                    <h2 class="text-4xl md:text-5xl font-serif font-bold text-primary mb-8" data-cms-bind="#about_title">
+                    <h2 id="about-title" class="text-4xl md:text-5xl font-serif font-bold text-primary mb-8" data-cms-bind="#about_title">
                         Qarabağın Qida <br> <span class="text-secondary">Təhlükəsizliyi</span>
                     </h2>
-                    <p class="text-gray-600 text-lg leading-relaxed mb-6" data-cms-bind="#about_text_1">
+                    <p id="about-text-1" class="text-gray-600 text-lg leading-relaxed mb-6" data-cms-bind="#about_text_1">
                         <strong class="text-primary">Azhunholding MMC</strong> — Azərbaycan Respublikasının Xankəndi şəhərində fəaliyyət göstərən strateji əhəmiyyətli istehsal müəssisəsidir. Müasir texnologiyalarla təchiz olunmuş zavodumuz, regionun ən böyük un məmulatları istehsalçısıdır.
                     </p>
-                    <p class="text-gray-600 text-lg leading-relaxed mb-10" data-cms-bind="#about_text_2">
+                    <p id="about-text-2" class="text-gray-600 text-lg leading-relaxed mb-10" data-cms-bind="#about_text_2">
                         Biz təkcə çörək bişirmirik, biz Qarabağ regionunda yerləşən hərbi hissələrin, dövlət orqanlarının və mülki əhalinin gündəlik qida təminatını həyata keçiririk. Məqsədimiz — yüksək keyfiyyət və operativ təchizatdır.
                     </p>
                     
@@ -214,54 +214,8 @@
                 <div class="w-24 h-1 bg-secondary mx-auto mt-6"></div>
             </div>
 
-            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-10">
-                <!-- Product 1 -->
-                <div class="group bg-light rounded-xl overflow-hidden shadow-lg hover:shadow-2xl transition-all duration-500" data-aos="fade-up" data-aos-delay="0">
-                    <div class="relative h-64 overflow-hidden">
-                        <img src="https://images.unsplash.com/photo-1509440159596-0249088772ff?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80" alt="Çörək Məhsulları" class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110">
-                        <div class="absolute inset-0 bg-black/20 group-hover:bg-black/0 transition-all"></div>
-                    </div>
-                    <div class="p-8">
-                        <h3 class="text-2xl font-serif font-bold mb-3 text-primary" data-cms-bind="#product_1_title">Əla Növ Buğda Çörəyi</h3>
-                        <p class="text-gray-600 mb-6 leading-relaxed" data-cms-bind="#product_1_desc">Ən keyfiyyətli unlardan hazırlanan, gündəlik təzə bişirilən buğda çörəyi.</p>
-                        <div class="flex justify-between items-center">
-                            <span class="text-secondary font-bold">Strateji Təminat</span>
-                            <i class="fas fa-seedling text-secondary"></i>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Product 2 -->
-                <div class="group bg-light rounded-xl overflow-hidden shadow-lg hover:shadow-2xl transition-all duration-500" data-aos="fade-up" data-aos-delay="100">
-                    <div class="relative h-64 overflow-hidden">
-                        <img src="https://images.unsplash.com/photo-1555507036-ab1f4038808a?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80" alt="Un Məmulatları" class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110">
-                        <div class="absolute inset-0 bg-black/20 group-hover:bg-black/0 transition-all"></div>
-                    </div>
-                    <div class="p-8">
-                        <h3 class="text-2xl font-serif font-bold mb-3 text-primary" data-cms-bind="#product_2_title">Xüsusi Çovdar Çörəyi</h3>
-                        <p class="text-gray-600 mb-6 leading-relaxed" data-cms-bind="#product_2_desc">Pəhriz saxlayanlar və sağlam qidalananlar üçün vitaminlərlə zəngin çovdar çörəyi.</p>
-                        <div class="flex justify-between items-center">
-                            <span class="text-secondary font-bold">Təbii Tərkib</span>
-                            <i class="fas fa-wheat-awn text-secondary"></i>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Product 3 -->
-                <div class="group bg-light rounded-xl overflow-hidden shadow-lg hover:shadow-2xl transition-all duration-500" data-aos="fade-up" data-aos-delay="200">
-                    <div class="relative h-64 overflow-hidden">
-                        <img src="https://images.unsplash.com/photo-1530610476181-d83430b64dcd?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80" alt="Bulkalar" class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110">
-                        <div class="absolute inset-0 bg-black/20 group-hover:bg-black/0 transition-all"></div>
-                    </div>
-                    <div class="p-8">
-                        <h3 class="text-2xl font-serif font-bold mb-3 text-primary" data-cms-bind="#product_3_title">Şirniyyat və Bulkalar</h3>
-                        <p class="text-gray-600 mb-6 leading-relaxed" data-cms-bind="#product_3_desc">Gündəlik təzə hazırlanan, müxtəlif çeşidli dadlı bulkalar və un məmulatları.</p>
-                        <div class="flex justify-between items-center">
-                            <span class="text-secondary font-bold">Gündəlik Təzə</span>
-                            <i class="fas fa-stroopwafel text-secondary"></i>
-                        </div>
-                    </div>
-                </div>
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-10" id="products-container">
+                <!-- Məhsullar Firebase-dən bura yüklənəcək -->
             </div>
 
             <div class="mt-16 text-center">
@@ -478,56 +432,121 @@
         firebase.initializeApp(firebaseConfig);
         const db = firebase.database();
 
-        function updateContent() {
-            db.ref('site_content').on('value', snapshot => {
-                const data = snapshot.val();
-                if (data) {
-                    if (data.hero_title) document.getElementById('hero-title').innerHTML = data.hero_title.replace(/\n/g, '<br>');
-                    if (data.hero_subtitle) document.getElementById('hero-subtitle').innerHTML = data.hero_subtitle.replace(/\n/g, '<br>');
-                    
-                    if (data.about_title) {
-                        const aboutTitleEl = document.querySelector('[data-cms-bind="#about_title"]');
-                        if (aboutTitleEl) aboutTitleEl.innerHTML = data.about_title.replace(/\n/g, '<br>');
-                    }
-                    if (data.about_text_1) {
-                        const aboutTextEl = document.querySelector('[data-cms-bind="#about_text_1"]');
-                        if (aboutTextEl) aboutTextEl.innerHTML = data.about_text_1;
-                    }
-                }
+        let categories = {};
+        let products = {};
+
+        function initData() {
+            // Kateqoriyaları yüklə
+            db.ref('categories').on('value', snapshot => {
+                categories = snapshot.val() || {};
+                renderProducts();
             });
 
             // Məhsulları yüklə
             db.ref('products').on('value', snapshot => {
-                const container = document.getElementById('products-container');
-                container.innerHTML = '';
+                products = snapshot.val() || {};
+                renderProducts();
+            });
+
+            // Site Content
+            db.ref('site_content').on('value', snapshot => {
                 const data = snapshot.val();
-                if (!data) {
-                    container.innerHTML = '<p class="text-center col-span-full text-gray-500 italic">Məhsul tapılmadı.</p>';
-                    return;
+                if (data) {
+                    if (data.hero_title) document.getElementById('hero-title').innerText = data.hero_title;
+                    if (data.hero_subtitle) document.getElementById('hero-subtitle').innerText = data.hero_subtitle;
+                    if (data.about_title) document.getElementById('about-title').innerText = data.about_title;
+                    if (data.about_text_1) document.getElementById('about-text-1').innerText = data.about_text_1;
+                    if (data.about_text_2) document.getElementById('about-text-2').innerText = data.about_text_2;
                 }
-                Object.keys(data).forEach((id, index) => {
-                    const p = data[id];
-                    container.innerHTML += `
-                        <div class="group bg-light rounded-xl overflow-hidden shadow-lg hover:shadow-2xl transition-all duration-500" data-aos="fade-up" data-aos-delay="${index * 100}">
-                            <div class="relative h-64 overflow-hidden">
-                                <img src="${p.image}" alt="${p.name}" class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110">
-                                <div class="absolute inset-0 bg-black/20 group-hover:bg-black/0 transition-all"></div>
-                            </div>
-                            <div class="p-8">
-                                <h3 class="text-2xl font-serif font-bold mb-3 text-primary">${p.name}</h3>
-                                <p class="text-gray-600 mb-6 leading-relaxed">${p.desc}</p>
-                                <div class="flex justify-between items-center">
-                                    <span class="text-secondary font-bold">Keyfiyyətli Seçim</span>
-                                    <i class="fas fa-check-circle text-secondary"></i>
-                                </div>
-                            </div>
-                        </div>
-                    `;
-                });
             });
         }
 
-        document.addEventListener('DOMContentLoaded', updateContent);
+        function renderProducts() {
+            const container = document.getElementById('products-container');
+            container.innerHTML = '';
+            
+            // Container grid class-nı silirik (çünki artıq iç-içə sectionlar olacaq)
+            container.className = 'space-y-20';
+
+            if (!products || Object.keys(products).length === 0) {
+                container.innerHTML = '<p class="text-center text-gray-500 italic">Hələlik məhsul yoxdur.</p>';
+                return;
+            }
+
+            // 1. Kateqoriyalı məhsulları qruplaşdır
+            const grouped = {};
+            const uncategorized = [];
+
+            Object.keys(products).forEach(id => {
+                const p = products[id];
+                if (p.categoryId && categories[p.categoryId]) {
+                    if (!grouped[p.categoryId]) grouped[p.categoryId] = [];
+                    grouped[p.categoryId].push({ id, ...p });
+                } else {
+                    uncategorized.push({ id, ...p });
+                }
+            });
+
+            // 2. Kateqoriyaları render et
+            Object.keys(grouped).forEach(catId => {
+                const catName = categories[catId].name;
+                const catProducts = grouped[catId];
+                
+                const sectionHtml = `
+                    <div data-aos="fade-up">
+                        <div class="flex items-center mb-10">
+                            <div class="h-px bg-gray-200 flex-1"></div>
+                            <h3 class="text-3xl font-serif font-bold text-primary px-8 text-center uppercase tracking-wider">${catName}</h3>
+                            <div class="h-px bg-gray-200 flex-1"></div>
+                        </div>
+                        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-10">
+                            ${catProducts.map((p, index) => createProductCard(p, index)).join('')}
+                        </div>
+                    </div>
+                `;
+                container.innerHTML += sectionHtml;
+            });
+
+            // 3. Kateqoriyasız məhsulları render et (əgər varsa)
+            if (uncategorized.length > 0) {
+                const sectionHtml = `
+                    <div data-aos="fade-up">
+                        ${Object.keys(grouped).length > 0 ? `
+                        <div class="flex items-center mb-10">
+                            <div class="h-px bg-gray-200 flex-1"></div>
+                            <h3 class="text-2xl font-serif font-bold text-gray-400 px-8 text-center uppercase tracking-wider">Digər</h3>
+                            <div class="h-px bg-gray-200 flex-1"></div>
+                        </div>` : ''}
+                        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-10">
+                            ${uncategorized.map((p, index) => createProductCard(p, index)).join('')}
+                        </div>
+                    </div>
+                `;
+                container.innerHTML += sectionHtml;
+            }
+        }
+
+        function createProductCard(p, index) {
+            return `
+                <div class="group bg-light rounded-xl overflow-hidden shadow-lg hover:shadow-2xl transition-all duration-500 border border-gray-100">
+                    <div class="relative h-72 overflow-hidden bg-white">
+                        <img src="${p.image || 'https://via.placeholder.com/400'}" alt="${p.name}" class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110">
+                        <div class="absolute inset-0 bg-black/20 group-hover:bg-black/0 transition-all"></div>
+                        ${p.price ? `<div class="absolute top-4 right-4 bg-secondary text-white px-3 py-1 font-bold rounded shadow-lg text-sm">${p.price}</div>` : ''}
+                    </div>
+                    <div class="p-8">
+                        <h3 class="text-2xl font-serif font-bold mb-3 text-primary group-hover:text-secondary transition-colors">${p.name}</h3>
+                        <p class="text-gray-600 mb-6 leading-relaxed line-clamp-3 text-sm">${p.desc || ''}</p>
+                        <div class="flex justify-between items-center pt-4 border-t border-gray-200/50">
+                            <span class="text-secondary font-bold text-xs uppercase tracking-widest">Azhun Keyfiyyəti</span>
+                            <i class="fas fa-arrow-right text-gray-300 group-hover:text-secondary transition-colors transform group-hover:translate-x-2"></i>
+                        </div>
+                    </div>
+                </div>
+            `;
+        }
+
+        document.addEventListener('DOMContentLoaded', initData);
     </script>
 </body>
 </html>
